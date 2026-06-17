@@ -1,0 +1,20 @@
+name: Build Windows VST3
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DANA_COPY_AFTER_BUILD=FALSE
+      - name: Build
+        run: cmake --build build --config Release --target AnA_VST3
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: AnA-Windows-VST3
+          path: build/AnA_artefacts/Release/VST3/
+          if-no-files-found: error
